@@ -12,6 +12,7 @@ import 'package:cab_rider/styles/styles.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_geofire/flutter_geofire.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -640,6 +641,40 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin{
       _Circles.add(destinationCircle);
     });
 
+  }
+
+  void startGeofireListener() {
+    Geofire.initialize('driversAvailable');
+
+    Geofire.queryAtLocation(currentPosition.latitude, currentPosition.longitude, 5).listen((map) {
+      print(map);
+      if (map != null) {
+        var callBack = map['callBack'];
+
+        //latitude will be retrieved from map['latitude']
+        //longitude will be retrieved from map['longitude']
+
+        switch (callBack) {
+          case Geofire.onKeyEntered:
+
+            break;
+
+          case Geofire.onKeyExited:
+
+            break;
+
+          case Geofire.onKeyMoved:
+          // Update your key's location
+            break;
+
+          case Geofire.onGeoQueryReady:
+          // All Initial Data is loaded
+            print(map['result']);
+
+            break;
+        }
+      }
+    });
   }
 
   void createRideRequest(){
